@@ -2,7 +2,7 @@
 @section('title', 'Ajouter la bouteille')
 @section('content')
 <main class="flex-center">
-    <section class="structure flex-col-center height80">   
+    <section class="structure flex-col-center height80">
     <form class="form" action="{{ route('cellar.storeBottle') }}" method="POST">
         @csrf
         <div class="form-control">
@@ -19,10 +19,10 @@
             <label for="cellar_id">Choisir le Cellier</label>
             <select name="cellar_id" id="cellar_id" required>
                 <option value="">Choisir le Nom</option>
-                
+
                 @if (Auth::user()->cellars && Auth::user()->cellars->count())
                     @foreach (Auth::user()->cellars as $cellar)
-                        <option value="{{ $cellar->id }}">{{ $cellar->name }}</option>
+                        <option value="{{ $cellar->id }}">{{ $cellar->title }}</option>
                     @endforeach
                 @else
                     <option value="" disabled>Aucun cellier disponible</option>

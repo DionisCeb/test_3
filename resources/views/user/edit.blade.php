@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Registration')
+@section('title', 'Edit User')
 @section('content')
 @if(!$errors->isEmpty())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -18,8 +18,9 @@
 /> -->
 <main class="flex-center">
     <section class="structure flex-col-center height60 gap20">
-        <form action="{{ route('user.store') }}" method="POST" class="form">
+        <form method="POST" class="form">
             @csrf
+            @method('put')
             <div class="form-control">
                 <label for="name">@lang('lang.user_name')</label>
                 <input type="text" id="name" name="name" value="{{old('name')}}">
@@ -38,30 +39,8 @@
                     </div>
                 @endif
             </div>
-            <div class="form-control">
-                <label for="password">@lang('lang.password')</label>
-                <input type="password" id="password" name="password">
-                @if ($errors->has('password'))
-                    <div class="alert_msg">
-                        {{$errors->first('password')}}
-                    </div>
-                @endif
-            </div>
-            <div class="form-control">
-                <label for="password_confirm">@lang('lang.password_confirm')</label>
-                <input type="password" id="password_confirmation" name="password_confirmation">
-                @if($errors->has('password_confirm'))
-                    <div class="alert_msg">
-                        {{$errors->first('password_confirm')}}
-                    </div>
-                @endif
-            </div>
-            <button type="submit" class="btn-border">@lang('lang.save')</button>
+            <button type="submit" class="btn-border">@lang('lang.update')</button>
         </form>
-
-        <div class="form_footer">
-            <p>@lang('lang.login_member')<a href="{{ route('auth.connection') }}">@lang('lang.login')</a></p>
-        </div>
     </section>
 </main>
 @endsection

@@ -32,9 +32,18 @@ Route::prefix('admin')->group(function () {
 Route::get('/bottles', [BottleController::class, 'index'])->name('bottle.index');
 Route::get('/scrape-bouteilles', [BottleController::class, 'scrape'])->name('bottle.scrape');
 Route::get('/scraping/stop', [BottleController::class, 'stopScraping'])->name('scraping.stop');
+/**
+ * Comptage des bouteilles en temps réel
+ */
+Route::get('/api/total-bottles', [BottleController::class, 'getTotalBottles'])->name('bottle.total_bottles');
+
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', [CellarController::class, 'index'])->name('cellar.index');
-    /* Welcome */
+    // Welcome route
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    // Route::get('/', [CellarController::class, 'index']);
     Route::get('/cellar/create', [CellarController::class, 'create'])->name('cellar.create');
     // Bottle Route
     Route::get('/bottle/{id}', [BottleController::class, 'details'])->name('bottle.details');

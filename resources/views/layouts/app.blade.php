@@ -12,30 +12,27 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="logo">VINO</div>
-        <div class="welcome-user hidden">
-             @auth
-                <!-- <p>@lang('lang.welcome'), <span>{{ Auth::user()->name }}</span></p> -->
-                @if(Auth::user()->isAdmin)
-                <button><a href="{{ route('bottle.delete') }}">@lang('lang.delete_bottle')</a></button>
-                <button><a href="{{ route('bottle.scrape') }}">@lang('lang.scrape_bottle')</a></button>
-                @endif
-             @endauth
+    <div class="logo">
+    <img src="{{ asset('img/header/vino-logo-horizontale.svg') }}" alt="Logo Vino">
+</div>
+</div>
+        <div class="welcome-user">
+            @guest
+            <button><a href="{{ route('auth.connection') }}">@lang('lang.login')</a></button>
+            @else
+            <button><a href="{{ route('logout') }}">@lang('lang.logout')</a></button>
+            @endguest
+
         </div>
         
         <ul>
-            <!-- <ul class="nav_dropdown">
-                <li><a class="nav-link" href="{{ route('lang', 'en') }}">@lang('lang.language_en')</a></li>
-                <li><a class="nav-link" href="{{ route('lang', 'fr') }}">@lang('lang.language_fr')</a></li>
-            </ul> -->
             <div class="hidden dropdown">
                 <img src="{{ asset('img/navigation/language.png')}}" alt="language settings">
                 <div class="dropdown-box">
                     <a href="{{ route('lang', 'en') }}">@lang('lang.lang_en')</a>
                     <a href="{{ route('lang', 'fr') }}">@lang('lang.lang_fr')</a>
                 </div>
-            </div>
-            
+            </div>  
         </ul>
 
     </header>
@@ -66,16 +63,40 @@
     @yield('content')
     <!-- Navigation -->
     <nav class="navigation">
-      <!-- <a class="nav-link" href="/"> <img src="{{asset('img/navigation/home.svg') }}" alt="nav-image">@lang('lang.home')</a> -->
-      <a class="nav-link" href="{{ route('cellar.index') }}"> <img src="{{asset('img/navigation/my-collection.svg') }}" alt="nav-image">@lang('lang.cellars')</a>
-      <a class="nav-link" href="{{ route('bottle.index') }}"> <img src="{{asset('img/navigation/catalog.svg') }}" alt="nav-image">@lang('lang.bottles')</a>
-      @guest
-        <a class="nav-link" href="{{ route('auth.connection') }}"><img src="{{asset('img/navigation/profile.svg') }}" alt="nav-image">@lang('lang.login')</a>
-        @else
-        <a class="nav-link" href="{{ route('user.show', Auth::user()->id) }}"> @lang('lang.profile')</a>
-        <a class="nav-link" href="{{ route('logout') }}"><img src="{{asset('img/navigation/profile.svg') }}" alt="nav-image">@lang('lang.logout')</a>
-        @endguest
-     
+        <!-- Visible for regular users only -->
+        @auth('web')
+            <a class="nav-link" href="/"> <img src="{{asset('img/navigation/home.svg') }}" alt="nav-image">@lang('lang.home')</a>
+            <a class="nav-link" href="{{ route('cellar.index') }}"> <img src="{{asset('img/navigation/my-collection.svg') }}" alt="nav-image">@lang('lang.cellars')</a>
+            <a class="nav-link" href="{{ route('bottle.index') }}"> <img src="{{asset('img/navigation/catalog.svg') }}" alt="nav-image">@lang('lang.bottles')</a>
+        @endauth
+        @auth('admin')
+            <a class="nav-link" href="{{ route('admin.dashboard') }}"> 
+                <img src="{{asset('img/navigation/dashboard.png') }}" alt="nav-image">@lang('lang.dashboard')
+            </a>
+        @endauth
+        @php
+    $isAdmin = Auth::guard('admin')->check(); // Check if admin is logged in
+    $isUser = Auth::guard('web')->check();    // Check if user is logged in
+@endphp
+
+@if(!$isAdmin && !$isUser)
+  <!-- Guest: Not logged in -->
+  <a class="nav-link" href="{{ route('auth.connection') }}">
+    <img src="{{ asset('img/navigation/profile.svg') }}" alt="nav-image">@lang('lang.login')
+  </a>
+@else
+  @if($isAdmin)
+    <!-- Admin logged in -->
+    <a class="nav-link" href="{{ route('logout') }}">
+      <img src="{{ asset('img/navigation/profile.svg') }}" alt="nav-image">@lang('lang.logout') (Admin)
+    </a>
+  @elseif($isUser)
+    <!-- User logged in -->
+    <a class="nav-link" href="{{ route('logout') }}">
+      <img src="{{ asset('img/navigation/profile.svg') }}" alt="nav-image">@lang('lang.logout')
+    </a>
+  @endif
+@endif
     </nav>
 
     <!-----Script général réutilisable pour masquer la modale------>
@@ -94,69 +115,7 @@
     </script>
 
 
-    <script>
-        document.getElementById('start-scraping').addEventListener('click', function () {
-        const statusText = document.getElementById('scraping-status');
-        const loaderStart = document.querySelector('.loader_start');
-        const loaderStop = document.querySelector('.loader_stop');
-
-        // Show the starting loader and hide the stopping loader
-        loaderStart.classList.remove('hide');
-        loaderStop.classList.add('hide');
-
-        statusText.textContent = 'Scraping in progress...';
-        
-        
-
-        fetch('/scrape-bouteilles')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    statusText.textContent = data.message;
-                } else {
-                    statusText.textContent = 'Scraping failed.';
-                }
-            })
-            .catch(err => {
-                console.error('Error during scraping:', err);
-                statusText.textContent = 'An error occurred. Please try again.';
-            })
-            .finally(() => {
-                // Hide the loader once scraping starts successfully
-                loaderStart.classList.add('hide');
-            });
-    });
-
-
-    document.getElementById('stop-scraping').addEventListener('click', function () {
-        const statusText = document.getElementById('scraping-status');
-
-        statusText.textContent = 'Stopping scraping...';
-
-        fetch('/scraping/stop')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    statusText.textContent = data.message;
-                    // Refresh the page after a short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000); // 1 second delay before refreshing
-                } else {
-                    statusText.textContent = 'Failed to stop scraping.';
-                }
-            })
-            .catch(err => {
-                console.error('Error during stop:', err);
-                statusText.textContent = 'An error occurred while stopping scraping.';
-            })
-            .finally(() => {
-                // Hide the loader once scraping stops successfully
-                loaderStop.classList.add('hide');
-            });
-    });
-
-    </script>
+    
 
 
 

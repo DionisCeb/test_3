@@ -57,10 +57,6 @@
                                 <p>{{ $bottle->country }}</p>
                             </div>
                             <div>
-                            <div class="card-category">
-                                <p>@lang('lang.degree_alcohol')<br>{{ $bottle->degree_alcohol }}</p>
-                                <p>@lang('lang.sugar_content')<br>{{ $bottle->sugar_content }}</p>
-                            </div>
                         </div>
                         <a href="{{ route('bottle.details', ['id' => $bottle->id]) }}" class="btn-border">@lang('lang.view')</a>
                     </article>

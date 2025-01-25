@@ -5,7 +5,7 @@
 
 <main class="flex-center height80">    
         <div class="structure">
-            <header class="filter-wrapper">
+            <header class="filter-wrapper mb-10 pt-20 pb-20">
                 <form action="{{ route('bottle.index') }}" method="GET" class="search-container {{ !empty($query) ? 'expanded' : '' }}" id="search-form">
                     <input 
                         type="text" 
@@ -23,14 +23,14 @@
             </header>
              <!-- Afficher la quantité trouvée par défaut -->
              @if (empty($query))
-                <div class="results">
+                <div class="results hidden">
                     <h2>@lang('lang.result_title')</h2>
                     <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
                 </div>
             @endif
             <!--Afficher la quantité trouvée après la requête -->
             @if (!empty($query))
-                <div class="results">
+                <div class="results mb-10">
                     <h2>Recherche de : "{{ $query }}"</h2>
                     <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
                     <a href="{{ route('bottle.index') }}" class="btn-border">@lang('lang.bottles')</a>
@@ -58,7 +58,10 @@
                             </div>
                             <div>
                         </div>
-                        <a href="{{ route('bottle.details', ['id' => $bottle->id]) }}" class="btn-border">@lang('lang.view')</a>
+                        <div class="btn-container">
+                            <a href="{{ route('bottle.details', ['id' => $bottle->id]) }}" class="btn-border">@lang('lang.view')</a>
+                            <a href="{{ route('cellar.add', ['id' => $bottle->id]) }}" class="btn-border btn-go"><i class="fa-solid fa-plus"></i></a>
+                        </div>
                     </article>
                 @endforeach
             
@@ -68,35 +71,6 @@
         </div>
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-
-   // Empêcher la soumission du formulaire si l'entrée est vide
-    searchForm.addEventListener('submit', function (e) {
-        if (searchInput.value.trim() === '') {
-            // Arrêter la soumission du formulaire
-            e.preventDefault(); 
-        }
-    });
-
-    // Autoriser l'extension de la saisie en cliquant sur le bouton de recherche
-    searchBtn.addEventListener('click', function (e) {
-        if (searchInput.value.trim() === '') {
-            // Empêcher la soumission du formulaire uniquement si l'entrée est vide
-            e.preventDefault(); 
-             // Focaliser l'entrée pour déclencher l'expansion
-            searchInput.focus();
-        }
-    });
-});
-
-
-</script>
-
-<!---Change the icon of the search box--->
-
+<script src="{{ asset('js/classes/SearchFormHandler.js') }}"></script>
 
 @endsection

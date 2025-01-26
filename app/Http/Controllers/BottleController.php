@@ -18,24 +18,45 @@ class BottleController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        // Check if a search query is provided
-        $query = $request->input('search');
-        
-        if ($query) {
-            // Filter bottles by title using the search query
-            $bottles = Bottle::where('title', 'LIKE', '%' . $query . '%')
-            ->orderby('title')
-            ->paginate(5);
-        } else {
-            // If no search query, retrieve all bottles
-            $bottles = Bottle::orderby('title')
-            ->paginate(5);
-        }
-        // Pass the bottles and the query (to keep input value) to the view
-        return view('bottle.index', compact('bottles', 'query'));
+{
+    // Retrieve filter values
+    $colors = Bottle::select('color')->distinct()->pluck('color');
+    $countries = Bottle::select('country')->distinct()->pluck('country');
+    $sizes = Bottle::select('size')->distinct()->pluck('size');
+
+    // Check if the query or filters exist
+    $query = $request->input('search');
+    $color = $request->input('color');
+    $country = $request->input('country');
+    $size = $request->input('size');
+
+    // Base query
+    $bottlesQuery = Bottle::query();
+
+    // Apply filters if they exist
+    if ($query) {
+        $bottlesQuery->where('title', 'LIKE', '%' . $query . '%');
     }
-    
+
+    if ($color) {
+        $bottlesQuery->where('color', $color);
+    }
+
+    if ($country) {
+        $bottlesQuery->where('country', $country);
+    }
+
+    if ($size) {
+        $bottlesQuery->where('size', $size);
+    }
+
+    // Get filtered results
+    $bottles = $bottlesQuery->orderby('title')->paginate(5);
+
+    // Pass data to the view
+    return view('bottle.index', compact('bottles', 'query', 'colors', 'countries', 'sizes', 'color', 'country', 'size'));
+}
+
 
     public function details($id)
     {

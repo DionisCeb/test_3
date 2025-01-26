@@ -4,11 +4,36 @@
 <main class="flex-center flex-center height80">   
     <section class="structure">
         <h1 class="page-title">{{ $cellar->title }}</h1> 
-        <div class="results">
-            <h2>@lang('lang.result_title')</h2>
-            <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
-            <p><span>Ajouter Les Bouteilles:</span></p>
-            <a href="{{ route('bottle.index') }}" class="btn-border">Ajouter</a>
+        <header class="filter-wrapper just-right mb-10 pt-20 pb-20">
+            <form action="" method="GET" class="search-container {{ !empty($query) ? 'expanded' : '' }}" id="search-form">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Recherche..." 
+                    class="search-input"
+                    value="{{ old('search', $query ?? '')}}"
+                    id="search-input"
+                >
+                <button type="submit" class="search-btn" id="search-btn">
+                    <i class="fas fa-search" id="search-icon"></i>
+                </button>
+                
+            </form>
+        </header>
+        <div class="results mb-10">
+            @if (!empty($query))
+                <!-- Display the search result title -->
+                <h2>@lang('lang.result_title')</h2>
+                <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
+            @else
+                <!-- Display the default title -->
+                <h2>Vous avez <span>{{ $bottles->total() }} bouteilles</span></h2>
+            @endif
+
+            @if (empty($query))
+                <p><span>Ajouter Les Bouteilles:</span></p>
+                <a href="{{ route('bottle.index') }}" class="btn-border">Ajouter</a>
+            @endif
         </div>
         <section class="grid mt-20 mb-10">
             @if ($bottles->isEmpty())

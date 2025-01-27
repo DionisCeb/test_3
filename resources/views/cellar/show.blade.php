@@ -5,40 +5,23 @@
     <section class="structure">
         <h1 class="page-title">{{ $cellar->title }}</h1> 
         <header class="filter-wrapper just-between mb-10 pt-20 pb-20">
-        <div class="filter-box">
+        
+
+            <form action="" method="GET" class="search-container {{ !empty($query) ? 'expanded' : '' }}" id="search-form">
+            <div class="filter-box">
             <i class="fa-solid fa-filter"></i>
             <div class="filter-options">
                 <div class="filter-item">
                 <label for="type">Type:</label>
-                <select id="type" name="type">
-                    <option value="">All</option>
-                    <option value="red">Red</option>
-                    <option value="white">White</option>
-                    <option value="sparkling">Sparkling</option>
-                </select>
-                </div>
-                <div class="filter-item">
-                <label for="country">Country:</label>
-                <select id="country" name="country">
-                    <option value="">All</option>
-                    <option value="france">France</option>
-                    <option value="italy">Italy</option>
-                    <option value="spain">Spain</option>
-                </select>
-                </div>
-                <div class="filter-item">
-                <label for="volume">Volume:</label>
-                <select id="volume" name="volume">
-                    <option value="">All</option>
-                    <option value="750ml">750 ml</option>
-                    <option value="500ml">500 ml</option>
-                    <option value="1l">1 L</option>
+                <select id="type" name="filter">
+                    <option value="title">Title</option>
+                    <option value="country">Country</option>
+                    <option value="Region">Region</option>
+                    <option value="color">Color</option>
                 </select>
                 </div>
             </div>
             </div>
-
-            <form action="" method="GET" class="search-container {{ !empty($query) ? 'expanded' : '' }}" id="search-form">
                 <input 
                     type="text" 
                     name="search" 
@@ -53,10 +36,32 @@
                 
             </form>
         </header>
-        <div class="results mb-10">
-            @if (!empty($query))
-                <!-- Display the search result title -->
-                <h2>@lang('lang.result_title')</h2>
+
+        <!-- Afficher la quantité trouvée par défaut -->
+        @if (empty($query) && empty($color) && empty($country) && empty($size))
+                <div class="results">
+                    <h2>Vous avez <span>{{ $bottles->total() }} bouteilles</span></h2>
+                    <p><span>Ajouter plus de bouteilles:</span></p>
+                    <a href="{{ route('bottle.index') }}" class="btn-border">Ajouter</a>
+                </div>
+            @endif
+             <!-- Afficher la quantité trouvée après le filtrage -->
+             
+        <!--Afficher la quantité trouvée après la requête -->
+        @if (!empty($query) || !empty($color) || !empty($country) || !empty($size))
+            <div class="results mb-10">
+                @if (!empty($query))
+                    <h2>Recherche de : "<span>{{ $query }}</span>"</h2>
+                @endif
+                @if (!empty($color) || !empty($country) || !empty($size))
+                    <ul>Filtres:
+                        @if (!empty($color)) <li>{{ $color }}</li>@endif
+                        @if (!empty($color) && (!empty($country) || !empty($size))) @endif
+                        @if (!empty($country)) <li>{{ $country }}</li>@endif
+                        @if (!empty($country) && !empty($size)) @endif
+                        @if (!empty($size)) <li>{{ $size }}</li>@endif
+                    </ul>
+                @endif
                 <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
             @else
                 <!-- Display the default title -->
@@ -68,7 +73,8 @@
                 <a href="{{ route('bottle.index') }}" class="btn-border">Ajouter</a>
             @endif
         </div>
-        <section class="grid mt-20 mb-10">
+
+        <section class="flex-col gap10">
             @if ($bottles->isEmpty())
             <div class="results">
                     @if (!empty($query))
@@ -125,7 +131,6 @@
                     </div>
                 </article>
             @endforeach
-        @endif
         </section>
     </section>
 </main>

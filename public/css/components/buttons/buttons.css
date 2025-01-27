@@ -14,9 +14,9 @@
     gap:5px;
 }
 
-.btn-container a {
+/* .btn-container a {
     width: 100%;
-}
+} */
 
 /*Bouton général*/
 .btn {
@@ -27,8 +27,8 @@
     border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    /* text-decoration: none; */
-    /* transition: 1s; */
+    text-decoration: none;
+    transition: 1s;
     box-shadow: var(--btn-shadow);
     /* width: 100%; */
 }

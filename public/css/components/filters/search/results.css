@@ -1,5 +1,6 @@
 /* Classe principale pour afficher les résultats de recherche */
 .results {
+    /* background-color: var(--dark-accent); */
     background-color: var(--dark-accent);
     border: 1px solid #ddd;
     border-radius: 8px;

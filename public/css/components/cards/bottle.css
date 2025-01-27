@@ -7,7 +7,7 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
-    background-color: #6b7384;
+    background-color: #f8f8f8;
     border-radius: 15px;
     padding: 20px;
     text-align: center;
@@ -37,7 +37,7 @@
 .card_bottle .card-title h2 {
     /* width: 70%; */
     font-size: 1em;
-    color: #fff;
+    /* color: #fff; */
     text-align: left;
 }
 
@@ -47,24 +47,29 @@
     justify-content: left;
     align-items: center;
     gap: 5px;
-    color: #fff;
+    font-weight: bolder;
+    color:  #4b4b4b;
     font-size: 0.8em;
+}
+
+.card_bottle a {
+    width: 100%;
 }
 
 /* .card-category .line:last-child,
 .card-category p:last-child {
     display: none;
 } */
-.card-list {
+/* .card-list {
     color: white;
-}
+} */
 
 /* Ligne de séparation */
 .card-category .line {
-    height: 1px;
+    height: 2px;
     rotate: 90deg;
     width: 20px;
-    background-color: #fff;
+    background-color: #4b4b4b;
 }
 
 /* Style du prix */
@@ -75,19 +80,7 @@
 }
 
 
-<<<<<<< HEAD
-.card_bottle .btn-border {
-<<<<<<< HEAD
-    width: 50%;
-    padding: 5px;
-=======
-    /* width: 50%; */
-    /* padding: 5px; */
->>>>>>> main
-}
-=======
 
->>>>>>> main
 
 
 

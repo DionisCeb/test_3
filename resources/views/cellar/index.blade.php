@@ -3,7 +3,7 @@
 @section('content')
 <main class="flex-center"> 
     <section class="structure flex-col mb-10 height80 gap10">
-        <div class="btn-container"><a href="{{ route('cellar.create') }}" class="btn btn-icon">Ajouter un cellier <i class="fa-solid fa-plus"></i></a></div> 
+        <div class="btn-container just-right"><a href="{{ route('cellar.create') }}" class="btn btn-icon">Ajouter un cellier <i class="fa-solid fa-plus"></i></a></div> 
         @foreach ($cellars as $cellar)
             <article class="card_cellar">
                 <div class="card-body"> 

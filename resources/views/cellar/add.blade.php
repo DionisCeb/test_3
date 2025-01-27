@@ -19,12 +19,21 @@
             @endif
         </div>
         <div class="form-control">
-            <label for="cellar_id">@lang('lang.cellar_choose')</label>
-            <select name="cellar_id" id="cellar_id">
-                <option value="">@lang('lang.choose_name')</option>
-                @foreach (Auth::user()->cellars as $cellar)
-                    <option value="{{ $cellar->id }}">{{ $cellar->title }}</option>
-                @endforeach
+
+            <label for="cellar_id">Choisir le Cellier</label>
+            <select name="cellar_id" id="cellar_id" required>
+                <option value="{{ $first_cellar->id }}">{{ $first_cellar->title }}</option>
+
+                @if (Auth::user()->cellars && Auth::user()->cellars->count())
+                    @foreach (Auth::user()->cellars as $cellar)
+                    @if ($cellar->id != $first_cellar->id)
+                        <option value="{{ $cellar->id }}">{{ $cellar->title }}</option>
+                    @endif
+                    @endforeach
+                @else
+                    <option value="" disabled>Aucun cellier disponible</option>
+                @endif
+
             </select>
             @if ($errors->has('cellar_id'))
                 <div class="alert_msg">

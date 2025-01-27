@@ -22,7 +22,7 @@ class UserController extends Controller
         $users = User::select()
         ->orderby('name')
         ->paginate(10);
-        return $users;
+        // return $users;
         return view('user.index', ['users' => $users]);
     }
 
@@ -59,8 +59,9 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->password = Hash::make($request->password);
         $user->save();
+        // return $user->email;
         //
-        return redirect(route('user.login'))->withSuccess('Usager créé avec succès, veuillez bien vous connecter.');
+        return redirect(route('user.login', ['user' => $user]))->withSuccess('Usager créé avec succès, veuillez bien vous connecter.');
     }
 
 
@@ -70,7 +71,16 @@ class UserController extends Controller
     public function show(User $user)
     {
         if (Auth::user()->hasCellar()) {
-            $cellars = Cellar::where('user_id', Auth::user()->id);
+            $cellars = Cellar::where('user_id', Auth::user()->id)
+                ->get();
+            // foreach ($cellars as $cellar) {
+            //     # code...
+            //     $cellar_bottles = CellarBottle::where('cellar_id', $cellar->id)
+            //         -where('user_id', '=', Auth::user()->id)
+            //         ->get();
+            // }
+            // return $bottles;
+            // return $cellars;
             return view('user.show', ['user' => $user], compact('cellars'));
         }
         return view('user.show');
@@ -110,6 +120,16 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $name = $user->name;
+        $user->delete();
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } elseif (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+
+        return redirect()->route('user.login')->withSuccess('Usager : '.$name.' supprimer avec succes et déconnexion réussie.');
+
+        // return redirect()->route('user.index')->withSuccess('Usager supprimer avec succes.');
     }
 }

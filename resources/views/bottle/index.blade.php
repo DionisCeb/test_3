@@ -5,12 +5,24 @@
 
 <main class="flex-center height80">    
         <div class="structure">
-            <header class="filter-wrapper mb-10 pt-20 pb-20">
+            <header class="filter-wrapper">
             <form action="" method="GET" class="search-container {{ !empty($query) ? 'expanded' : '' }}" id="search-form">
            
                 <div class="filter-box">
+                 
                     <i class="fa-solid fa-filter"></i>
                     <div class="filter-options">
+                        
+                            <div class="filter-item">
+                                <label for="order">Tri :</label>
+                                <select name="order" id="order">Tri :
+                                    <option value="title">Titre</option>
+                                    <option value="color">Couleur</option>
+                                    <option value="region">Region</option>
+                                    <option value="country">Country</option>
+                                </select>
+                            </div>
+                        
                         <div class="filter-item">
                             <label for="color">Couleur:</label>
                             <select id="color" name="color">
@@ -62,15 +74,13 @@
                     <p><span>{{ $bottles->total() }}</span> @lang('lang.bottles')</p>
                 </div>
             @endif
-             <!-- Afficher la quantité trouvée après le filtrage -->
-             
             <!--Afficher la quantité trouvée après la requête -->
-            @if (!empty($query) || !empty($color) || !empty($country) || !empty($size))
+            @if (!empty($query) || !empty($color) || !empty($country) || !empty($size) || !empty($order))
                 <div class="results mb-10">
                     @if (!empty($query))
                         <h2>Recherche de : "<span>{{ $query }}</span>"</h2>
                     @endif
-                    @if (!empty($color) || !empty($country) || !empty($size))
+                    @if (!empty($color) || !empty($country) || !empty($size) || !empty($order))
                         <ul>Filtres:
                             @if (!empty($color)) <li>{{ $color }}</li>@endif
                             @if (!empty($color) && (!empty($country) || !empty($size))) @endif
@@ -78,6 +88,9 @@
                             @if (!empty($country) && !empty($size)) @endif
                             @if (!empty($size)) <li>{{ $size }}</li>@endif
                         </ul>
+                    @endif
+                    @if (!empty($order))
+                        <p>Ordonne par : {{ $order }}</p>
                     @endif
                     <p><span>{{ $bottles->total() }}</span>@lang('lang.result_subtitle')</p>
                     <a href="{{ route('bottle.index') }}" class="btn-border">@lang('lang.result_title')</a>
